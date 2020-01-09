@@ -152,10 +152,10 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
             movie.TmdbId = tmdbId;
             movie.ImdbId = resource.imdb_id;
-            movie.Title = resource.title;
-            movie.TitleSlug = Parser.Parser.ToUrlSlug(resource.title);
-            movie.CleanTitle = resource.title.CleanSeriesTitle();
-            movie.SortTitle = Parser.Parser.NormalizeTitle(resource.title);
+            movie.Title = resource.original_title;
+            movie.TitleSlug = Parser.Parser.ToUrlSlug(resource.original_title);
+            movie.CleanTitle = resource.original_title.CleanSeriesTitle();
+            movie.SortTitle = Parser.Parser.NormalizeTitle(resource.original_title);
             movie.Overview = resource.overview;
             movie.Website = resource.homepage;
 
