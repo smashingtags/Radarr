@@ -83,7 +83,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                .SetSegment("route", "movie")
                .SetSegment("id", tmdbId.ToString())
                .SetSegment("secondaryRoute", "")
-               .AddQueryParam("append_to_response", "alternative_titles,release_dates,videos,credits")
+               .AddQueryParam("append_to_response", "alternative_titles,release_dates,videos,credits,translations")
                .AddQueryParam("language", langCode.ToUpper())
 
                // .AddQueryParam("country", "US")
@@ -147,6 +147,16 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 else if (alternativeTitle.iso_3166_1.ToLower() == "us")
                 {
                     altTitles.Add(new AlternativeTitle(alternativeTitle.title, SourceType.TMDB, tmdbId, Language.English));
+                }
+            }
+
+            foreach (var translation in resource.translations.translations)
+            {
+                var translationLanguage = IsoLanguages.Find(translation.iso_3166_1.ToLower());
+
+                if (translationLanguage != null && translation.data.title.IsNotNullOrWhiteSpace())
+                {
+                    altTitles.Add(new AlternativeTitle(translation.data.title, SourceType.Translation, tmdbId, translationLanguage.Language));
                 }
             }
 

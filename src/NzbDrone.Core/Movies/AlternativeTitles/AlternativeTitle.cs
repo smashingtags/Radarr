@@ -67,7 +67,8 @@ namespace NzbDrone.Core.Movies.AlternativeTitles
         TMDB = 0,
         Mappings = 1,
         User = 2,
-        Indexer = 3
+        Indexer = 3,
+        Translation = 4
     }
 
     public class AlternativeYear

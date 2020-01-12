@@ -87,8 +87,8 @@ namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
         public AlternativeTitles alternative_titles { get; set; }
         public ReleaseDatesResource release_dates { get; set; }
         public VideosResource videos { get; set; }
-
         public CreditsResource credits { get; set; }
+        public TranslationsResource translations { get; set; }
     }
 
     public class ReleaseDatesResource
@@ -195,6 +195,26 @@ namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
         public string site { get; set; }
         public string size { get; set; }
         public string type { get; set; }
+    }
+
+    public class TranslationsResource
+    {
+        public List<Translation> translations { get; set; }
+    }
+
+    public class Translation
+    {
+        public string iso_639_1 { get; set; }
+        public string iso_3166_1 { get; set; }
+        public string name { get; set; }
+        public string english_name { get; set; }
+        public TranslationData data { get; set; }
+    }
+
+    public class TranslationData
+    {
+        public string title { get; set; }
+        public string overview { get; set; }
     }
 
     public class ListResponseRoot
