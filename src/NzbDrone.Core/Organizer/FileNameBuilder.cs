@@ -11,6 +11,8 @@ using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.MediaFiles.MediaInfo;
 using NzbDrone.Core.Movies;
+using NzbDrone.Core.Movies.AlternativeTitles;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Core.Organizer
@@ -50,7 +52,7 @@ namespace NzbDrone.Core.Organizer
         public static readonly Regex SeriesTitleRegex = new Regex(@"(?<token>\{(?:Series)(?<separator>[- ._])(Clean)?Title\})",
                                                                             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public static readonly Regex MovieTitleRegex = new Regex(@"(?<token>\{((?:(Movie|Original))(?<separator>[- ._])(Clean)?(Title|Filename)(The)?)\})",
+        public static readonly Regex MovieTitleRegex = new Regex(@"(?<token>\{((?:(Movie|Original))(?<separator>[- ._])(Clean)?(Title|Filename)(The)?)(?::(?<customFormat>[a-z0-9]+))?\})",
                                                                             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly Regex FileNameCleanupRegex = new Regex(@"([- ._])(\1)+", RegexOptions.Compiled);
@@ -213,9 +215,26 @@ namespace NzbDrone.Core.Organizer
 
         private void AddMovieTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, Movie movie)
         {
-            tokenHandlers["{Movie Title}"] = m => movie.Title;
-            tokenHandlers["{Movie CleanTitle}"] = m => CleanTitle(movie.Title);
+            tokenHandlers["{Movie Title}"] = m => GetLanguageTitle(movie, m.CustomFormat);
+            tokenHandlers["{Movie CleanTitle}"] = m => CleanTitle(GetLanguageTitle(movie, m.CustomFormat));
             tokenHandlers["{Movie Title The}"] = m => TitleThe(movie.Title);
+        }
+
+        private string GetLanguageTitle(Movie movie, string isoCode)
+        {
+            if (isoCode.IsNotNullOrWhiteSpace())
+            {
+                var language = IsoLanguages.Find(isoCode.ToLower())?.Language;
+
+                var titles = movie.AlternativeTitles.Where(t => t.SourceType == SourceType.Translation && t.Language == language);
+
+                if (titles.Any())
+                {
+                    return titles.First().Title;
+                }
+            }
+
+            return movie.Title;
         }
 
         private void AddTagsTokens(Dictionary<string, Func<TokenMatch, string>> tokenHandlers, MovieFile movieFile)
