@@ -13,6 +13,7 @@ import EditMovieModalConnector from 'Movie/Edit/EditMovieModalConnector';
 import DeleteMovieModal from 'Movie/Delete/DeleteMovieModal';
 import MovieIndexProgressBar from 'Movie/Index/ProgressBar/MovieIndexProgressBar';
 import MovieIndexOverviewInfo from './MovieIndexOverviewInfo';
+import TranslatedMovieTitleConnector from '../../TranslatedMovieTitleConnector';
 import styles from './MovieIndexOverview.css';
 
 const columnPadding = parseInt(dimensions.movieIndexColumnPadding);
@@ -172,7 +173,9 @@ class MovieIndexOverview extends Component {
                 className={styles.title}
                 to={link}
               >
-                {title}
+                <TranslatedMovieTitleConnector
+                  movieId={id}
+                />
               </Link>
 
               <div className={styles.actions}>

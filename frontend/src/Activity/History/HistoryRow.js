@@ -100,7 +100,7 @@ class HistoryRow extends Component {
                 <TableRowCell key={name}>
                   <MovieTitleLink
                     titleSlug={movie.titleSlug}
-                    title={movie.title}
+                    id={movie.id}
                   />
                 </TableRowCell>
               );

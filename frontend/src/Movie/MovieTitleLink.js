@@ -1,20 +1,23 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import Link from 'Components/Link/Link';
+import TranslatedMovieTitleConnector from './TranslatedMovieTitleConnector';
 
 class MovieTitleLink extends PureComponent {
 
   render() {
     const {
       titleSlug,
-      title
+      id
     } = this.props;
 
     const link = `/movie/${titleSlug}`;
 
     return (
       <Link to={link}>
-        {title}
+        <TranslatedMovieTitleConnector
+          movieId={id}
+        />
       </Link>
     );
   }
@@ -22,7 +25,7 @@ class MovieTitleLink extends PureComponent {
 
 MovieTitleLink.propTypes = {
   titleSlug: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired
+  id: PropTypes.number.isRequired
 };
 
 export default MovieTitleLink;

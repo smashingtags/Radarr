@@ -63,7 +63,6 @@ class MovieIndexRow extends Component {
       id,
       monitored,
       status,
-      title,
       titleSlug,
       collection,
       studio,
@@ -141,7 +140,7 @@ class MovieIndexRow extends Component {
                 >
                   <MovieTitleLink
                     titleSlug={titleSlug}
-                    title={title}
+                    id={id}
                   />
                 </VirtualTableRowCell>
               );

@@ -39,7 +39,7 @@ class AgendaEvent extends Component {
   render() {
     const {
       movieFile,
-      title,
+      id,
       titleSlug,
       inCinemas,
       monitored,
@@ -81,7 +81,7 @@ class AgendaEvent extends Component {
             <div className={styles.movieTitle}>
               <MovieTitleLink
                 titleSlug={titleSlug}
-                title={title}
+                id={id}
               />
             </div>
 

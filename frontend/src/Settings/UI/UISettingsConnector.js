@@ -9,13 +9,37 @@ import UISettings from './UISettings';
 
 const SECTION = 'ui';
 
+function createLanguagesSelector() {
+  return createSelector(
+    (state) => state.settings.languages,
+    (languages) => {
+      const items = languages.items;
+
+      if (!items) {
+        return [];
+      }
+
+      const newItems = items.map((item) => {
+        return {
+          key: item.id,
+          value: item.name
+        };
+      });
+
+      return newItems;
+    }
+  );
+}
+
 function createMapStateToProps() {
   return createSelector(
     (state) => state.settings.advancedSettings,
     createSettingsSectionSelector(SECTION),
-    (advancedSettings, sectionSettings) => {
+    createLanguagesSelector(),
+    (advancedSettings, sectionSettings, languages) => {
       return {
         advancedSettings,
+        languages,
         ...sectionSettings
       };
     }
