@@ -38,9 +38,9 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             RuleFor(c => c).Custom((c, context) =>
             {
-                if (c.Categories.Empty() && c.AnimeCategories.Empty())
+                if (c.Categories.Empty())
                 {
-                    context.AddFailure("Either 'Categories' or 'Anime Categories' must be provided");
+                    context.AddFailure("'Categories' must be provided");
                 }
             });
 
@@ -60,7 +60,6 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             ApiPath = "/api";
             Categories = new[] { 2000, 2010, 2020, 2030, 2035, 2040, 2045, 2050, 2060 };
-            AnimeCategories = new List<int>();
             MultiLanguages = new List<int>();
         }
 
@@ -79,9 +78,6 @@ namespace NzbDrone.Core.Indexers.Newznab
         [FieldDefinition(3, Label = "Categories", HelpText = "Comma Separated list, leave blank to disable all categories", Advanced = true)]
         public IEnumerable<int> Categories { get; set; }
 
-        [FieldDefinition(4, Label = "Anime Categories", HelpText = "Comma Separated list, leave blank to disable anime", Advanced = true)]
-        public IEnumerable<int> AnimeCategories { get; set; }
-
         [FieldDefinition(5, Label = "Additional Parameters", HelpText = "Additional Newznab parameters", Advanced = true)]
         public string AdditionalParameters { get; set; }
 
@@ -91,13 +87,6 @@ namespace NzbDrone.Core.Indexers.Newznab
             Advanced = true,
             Type = FieldType.Checkbox)]
         public bool RemoveYear { get; set; }
-
-        [FieldDefinition(7,
-            Label = "Search by Title",
-            HelpText = "By default, Radarr will try to search by IMDB ID if your indexer supports that. However, some indexers are not very good at tagging their releases correctly, so you can force Radarr to search that indexer by title instead.",
-            Advanced = true,
-            Type = FieldType.Checkbox)]
-        public bool SearchByTitle { get; set; }
 
         // Field 8 is used by TorznabSettings MinimumSeeders
         // If you need to add another field here, update TorznabSettings as well and this comment
