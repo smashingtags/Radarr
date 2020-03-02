@@ -27,7 +27,7 @@ namespace NzbDrone.Core.NetImport.TMDb
                 return movies;
             }
 
-            var jsonResponse = JsonConvert.DeserializeObject<MovieSearchRoot>(importResponse.Content);
+            var jsonResponse = JsonConvert.DeserializeObject<MovieSearchRootResource>(importResponse.Content);
 
             // no movies were return
             if (jsonResponse == null)
@@ -35,7 +35,7 @@ namespace NzbDrone.Core.NetImport.TMDb
                 return movies;
             }
 
-            return jsonResponse.results.SelectList(_skyhookProxy.MapMovie);
+            return jsonResponse.Results.SelectList(_skyhookProxy.MapMovie);
         }
 
         protected virtual bool PreProcess(NetImportResponse listResponse)

@@ -60,13 +60,13 @@ namespace NzbDrone.Core.NetImport.TMDb.User
                 var response = Json.Deserialize<AuthRefreshTokenResponse>(_httpClient.Execute(request).Content);
 
                 var oAuthRequest = new HttpRequestBuilder(Settings.OAuthUrl)
-                    .AddQueryParam("request_token", response.request_token)
+                    .AddQueryParam("request_token", response.Request_token)
                     .Build();
 
                 return new
                 {
                     OauthUrl = oAuthRequest.Url.ToString(),
-                    RequestToken = response.request_token
+                    RequestToken = response.Request_token
                 };
             }
             else if (action == "getOAuthToken")
@@ -86,8 +86,8 @@ namespace NzbDrone.Core.NetImport.TMDb.User
 
                 return new
                 {
-                    accountId = response.account_id,
-                    accessToken = response.access_token,
+                    accountId = response.Account_id,
+                    accessToken = response.Access_token,
                 };
             }
 

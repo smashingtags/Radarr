@@ -69,9 +69,9 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             request.AllowAutoRedirect = true;
             request.SuppressHttpError = true;
 
-            var response = _httpClient.Get<MovieSearchRoot>(request);
+            var response = _httpClient.Get<MovieSearchRootResource>(request);
 
-            return new HashSet<int>(response.Resource.results.Select(c => c.id));
+            return new HashSet<int>(response.Resource.Results.Select(c => c.Id));
         }
 
         public Tuple<Movie, List<Credit>> GetMovieInfo(int tmdbId, bool hasPreDBEntry)
@@ -123,99 +123,99 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             }
 
             var resource = response.Resource;
-            if (resource.status_message != null)
+            if (resource.Status_message != null)
             {
-                if (resource.status_code == 34)
+                if (resource.Status_code == 34)
                 {
                     _logger.Warn("Movie with TmdbId {0} could not be found. This is probably the case when the movie was deleted from TMDB.", tmdbId);
                     return null;
                 }
 
-                _logger.Warn(resource.status_message);
+                _logger.Warn(resource.Status_message);
                 return null;
             }
 
             var movie = new Movie();
             var altTitles = new List<AlternativeTitle>();
 
-            foreach (var alternativeTitle in resource.alternative_titles.titles)
+            foreach (var alternativeTitle in resource.Alternative_titles.Titles)
             {
-                if (alternativeTitle.iso_3166_1.ToLower() == langCode)
+                if (alternativeTitle.Iso_3166_1.ToLower() == langCode)
                 {
-                    altTitles.Add(new AlternativeTitle(alternativeTitle.title, SourceType.TMDB, tmdbId, IsoLanguages.Find(alternativeTitle.iso_3166_1.ToLower())?.Language ?? Language.English));
+                    altTitles.Add(new AlternativeTitle(alternativeTitle.Title, SourceType.TMDB, tmdbId, IsoLanguages.Find(alternativeTitle.Iso_3166_1.ToLower())?.Language ?? Language.English));
                 }
-                else if (alternativeTitle.iso_3166_1.ToLower() == "us")
+                else if (alternativeTitle.Iso_3166_1.ToLower() == "us")
                 {
-                    altTitles.Add(new AlternativeTitle(alternativeTitle.title, SourceType.TMDB, tmdbId, Language.English));
+                    altTitles.Add(new AlternativeTitle(alternativeTitle.Title, SourceType.TMDB, tmdbId, Language.English));
                 }
             }
 
-            foreach (var translation in resource.translations.translations)
+            foreach (var translation in resource.Translations.Translations)
             {
-                var translationLanguage = IsoLanguages.Find(translation.iso_3166_1.ToLower());
+                var translationLanguage = IsoLanguages.Find(translation.Iso_3166_1.ToLower());
 
-                if (translationLanguage != null && translation.data.title.IsNotNullOrWhiteSpace())
+                if (translationLanguage != null && translation.Data.Title.IsNotNullOrWhiteSpace())
                 {
-                    altTitles.Add(new AlternativeTitle(translation.data.title, SourceType.Translation, tmdbId, translationLanguage.Language));
+                    altTitles.Add(new AlternativeTitle(translation.Data.Title, SourceType.Translation, tmdbId, translationLanguage.Language));
                 }
             }
 
             movie.TmdbId = tmdbId;
-            movie.ImdbId = resource.imdb_id;
-            movie.Title = resource.original_title;
-            movie.TitleSlug = Parser.Parser.ToUrlSlug(resource.original_title);
-            movie.CleanTitle = resource.original_title.CleanSeriesTitle();
-            movie.SortTitle = Parser.Parser.NormalizeTitle(resource.original_title);
-            movie.Overview = resource.overview;
-            movie.Website = resource.homepage;
+            movie.ImdbId = resource.Imdb_id;
+            movie.Title = resource.Original_title;
+            movie.TitleSlug = Parser.Parser.ToUrlSlug(resource.Original_title);
+            movie.CleanTitle = resource.Original_title.CleanSeriesTitle();
+            movie.SortTitle = Parser.Parser.NormalizeTitle(resource.Original_title);
+            movie.Overview = resource.Overview;
+            movie.Website = resource.Homepage;
 
-            if (resource.release_date.IsNotNullOrWhiteSpace())
+            if (resource.Release_date.IsNotNullOrWhiteSpace())
             {
-                movie.InCinemas = DateTime.Parse(resource.release_date);
+                movie.InCinemas = DateTime.Parse(resource.Release_date);
 
                 movie.Year = movie.InCinemas.Value.Year;
             }
 
             movie.TitleSlug += "-" + movie.TmdbId.ToString();
 
-            movie.Images.AddIfNotNull(MapImage(resource.poster_path, MediaCoverTypes.Poster)); //TODO: Update to load image specs from tmdb page!
-            movie.Images.AddIfNotNull(MapImage(resource.backdrop_path, MediaCoverTypes.Fanart));
-            movie.Runtime = resource.runtime;
+            movie.Images.AddIfNotNull(MapImage(resource.Poster_path, MediaCoverTypes.Poster)); //TODO: Update to load image specs from tmdb page!
+            movie.Images.AddIfNotNull(MapImage(resource.Backdrop_path, MediaCoverTypes.Fanart));
+            movie.Runtime = resource.Runtime;
 
             //foreach(Title title in resource.alternative_titles.titles)
             //{
             //    movie.AlternativeTitles.Add(title.title);
             //}
-            foreach (ReleaseDates releaseDates in resource.release_dates.results)
+            foreach (ReleaseDatesLanguageResource releaseDates in resource.Release_dates.Results)
             {
-                foreach (ReleaseDate releaseDate in releaseDates.release_dates)
+                foreach (ReleaseDateResource releaseDate in releaseDates.Release_dates)
                 {
-                    if (releaseDate.type == 5 || releaseDate.type == 4)
+                    if (releaseDate.Type == 5 || releaseDate.Type == 4)
                     {
                         if (movie.PhysicalRelease.HasValue)
                         {
-                            if (movie.PhysicalRelease.Value.After(DateTime.Parse(releaseDate.release_date)))
+                            if (movie.PhysicalRelease.Value.After(DateTime.Parse(releaseDate.Release_date)))
                             {
-                                movie.PhysicalRelease = DateTime.Parse(releaseDate.release_date); //Use oldest release date available.
-                                movie.PhysicalReleaseNote = releaseDate.note;
+                                movie.PhysicalRelease = DateTime.Parse(releaseDate.Release_date); //Use oldest release date available.
+                                movie.PhysicalReleaseNote = releaseDate.Note;
                             }
                         }
                         else
                         {
-                            movie.PhysicalRelease = DateTime.Parse(releaseDate.release_date);
-                            movie.PhysicalReleaseNote = releaseDate.note;
+                            movie.PhysicalRelease = DateTime.Parse(releaseDate.Release_date);
+                            movie.PhysicalReleaseNote = releaseDate.Note;
                         }
                     }
                 }
             }
 
             movie.Ratings = new Ratings();
-            movie.Ratings.Votes = resource.vote_count;
-            movie.Ratings.Value = (decimal)resource.vote_average;
+            movie.Ratings.Votes = resource.Vote_count;
+            movie.Ratings.Value = (decimal)resource.Vote_average;
 
-            foreach (Genre genre in resource.genres)
+            foreach (GenreResource genre in resource.Genres)
             {
-                movie.Genres.Add(genre.name);
+                movie.Genres.Add(genre.Name);
             }
 
             var now = DateTime.Now;
@@ -274,26 +274,26 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 }
             }
 
-            if (resource.videos != null)
+            if (resource.Videos != null)
             {
-                foreach (Video video in resource.videos.results)
+                foreach (VideoResource video in resource.Videos.Results)
                 {
-                    if (video.type == "Trailer" && video.site == "YouTube")
+                    if (video.Type == "Trailer" && video.Site == "YouTube")
                     {
-                        if (video.key != null)
+                        if (video.Key != null)
                         {
-                            movie.YouTubeTrailerId = video.key;
+                            movie.YouTubeTrailerId = video.Key;
                             break;
                         }
                     }
                 }
             }
 
-            if (resource.production_companies != null)
+            if (resource.Production_companies != null)
             {
-                if (resource.production_companies.Any())
+                if (resource.Production_companies.Any())
                 {
-                    movie.Studio = resource.production_companies[0].name;
+                    movie.Studio = resource.Production_companies[0].Name;
                 }
             }
 
@@ -301,15 +301,15 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
             var people = new List<Credit>();
 
-            people.AddRange(resource.credits.Cast.Select(MapCast).ToList());
-            people.AddRange(resource.credits.Crew.Select(MapCrew).ToList());
+            people.AddRange(resource.Credits.Cast.Select(MapCast).ToList());
+            people.AddRange(resource.Credits.Crew.Select(MapCrew).ToList());
 
-            if (resource.belongs_to_collection != null)
+            if (resource.Belongs_to_collection != null)
             {
-                movie.Collection = MapCollection(resource.belongs_to_collection);
+                movie.Collection = MapCollection(resource.Belongs_to_collection);
 
-                movie.Collection.Images.AddIfNotNull(MapImage(resource.belongs_to_collection.poster_path, MediaCoverTypes.Poster));
-                movie.Collection.Images.AddIfNotNull(MapImage(resource.belongs_to_collection.backdrop_path, MediaCoverTypes.Fanart));
+                movie.Collection.Images.AddIfNotNull(MapImage(resource.Belongs_to_collection.Poster_path, MediaCoverTypes.Poster));
+                movie.Collection.Images.AddIfNotNull(MapImage(resource.Belongs_to_collection.Backdrop_path, MediaCoverTypes.Fanart));
             }
 
             return new Tuple<Movie, List<Credit>>(movie, people);
@@ -328,7 +328,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             request.AllowAutoRedirect = true;
 
             // request.SuppressHttpError = true;
-            var response = _httpClient.Get<FindRoot>(request);
+            var response = _httpClient.Get<FindRootResource>(request);
 
             if (response.HasHttpError)
             {
@@ -355,12 +355,12 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 }
             }
 
-            if (!response.Resource.movie_results.Any())
+            if (!response.Resource.Movie_results.Any())
             {
                 throw new MovieNotFoundException(imdbId);
             }
 
-            return MapMovie(response.Resource.movie_results.First());
+            return MapMovie(response.Resource.Movie_results.First());
         }
 
         public List<Movie> DiscoverNewMovies(string action)
@@ -370,7 +370,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             string allIds = string.Join(",", allMovies.Select(m => m.TmdbId));
             string ignoredIds = string.Join(",", allExclusions.Select(ex => ex.TmdbId));
 
-            List<MovieResult> results = new List<MovieResult>();
+            List<MovieResultResource> results = new List<MovieResultResource>();
 
             try
             {
@@ -383,7 +383,7 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                     return request;
                 });
 
-                results = results.Where(m => allMovies.None(mo => mo.TmdbId == m.id) && allExclusions.None(ex => ex.TmdbId == m.id)).ToList();
+                results = results.Where(m => allMovies.None(mo => mo.TmdbId == m.Id) && allExclusions.None(ex => ex.TmdbId == m.Id)).ToList();
             }
             catch (RadarrAPIException exception)
             {
@@ -506,9 +506,9 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 request.AllowAutoRedirect = true;
                 request.SuppressHttpError = true;
 
-                var response = _httpClient.Get<MovieSearchRoot>(request);
+                var response = _httpClient.Get<MovieSearchRootResource>(request);
 
-                var movieResults = response.Resource.results;
+                var movieResults = response.Resource.Results;
 
                 return movieResults.SelectList(MapSearchResult);
             }
@@ -523,9 +523,9 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             }
         }
 
-        private Movie MapSearchResult(MovieResult result)
+        private Movie MapSearchResult(MovieResultResource result)
         {
-            var movie = _movieService.FindByTmdbId(result.id);
+            var movie = _movieService.FindByTmdbId(result.Id);
 
             if (movie == null)
             {
@@ -535,30 +535,30 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
             return movie;
         }
 
-        public Movie MapMovie(MovieResult result)
+        public Movie MapMovie(MovieResultResource result)
         {
             var imdbMovie = new Movie();
-            imdbMovie.TmdbId = result.id;
+            imdbMovie.TmdbId = result.Id;
             try
             {
-                imdbMovie.SortTitle = Parser.Parser.NormalizeTitle(result.title);
-                imdbMovie.Title = result.title;
-                imdbMovie.TitleSlug = Parser.Parser.ToUrlSlug(result.title);
+                imdbMovie.SortTitle = Parser.Parser.NormalizeTitle(result.Title);
+                imdbMovie.Title = result.Title;
+                imdbMovie.TitleSlug = Parser.Parser.ToUrlSlug(result.Title);
 
                 try
                 {
-                    if (result.release_date.IsNotNullOrWhiteSpace())
+                    if (result.Release_date.IsNotNullOrWhiteSpace())
                     {
-                        imdbMovie.InCinemas = DateTime.ParseExact(result.release_date, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo);
+                        imdbMovie.InCinemas = DateTime.ParseExact(result.Release_date, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo);
                         imdbMovie.Year = imdbMovie.InCinemas.Value.Year;
                     }
 
-                    if (result.physical_release.IsNotNullOrWhiteSpace())
+                    if (result.Physical_release.IsNotNullOrWhiteSpace())
                     {
-                        imdbMovie.PhysicalRelease = DateTime.ParseExact(result.physical_release, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo);
-                        if (result.physical_release_note.IsNotNullOrWhiteSpace())
+                        imdbMovie.PhysicalRelease = DateTime.ParseExact(result.Physical_release, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo);
+                        if (result.Physical_release_note.IsNotNullOrWhiteSpace())
                         {
-                            imdbMovie.PhysicalReleaseNote = result.physical_release_note;
+                            imdbMovie.PhysicalReleaseNote = result.Physical_release_note;
                         }
                     }
                 }
@@ -614,23 +614,23 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
                 imdbMovie.TitleSlug += "-" + imdbMovie.TmdbId;
 
                 imdbMovie.Images = new List<MediaCover.MediaCover>();
-                imdbMovie.Overview = result.overview;
-                imdbMovie.Ratings = new Ratings { Value = (decimal)result.vote_average, Votes = result.vote_count };
+                imdbMovie.Overview = result.Overview;
+                imdbMovie.Ratings = new Ratings { Value = (decimal)result.Vote_average, Votes = result.Vote_count };
 
                 try
                 {
-                    imdbMovie.Images.AddIfNotNull(MapImage(result.poster_path, MediaCoverTypes.Poster));
+                    imdbMovie.Images.AddIfNotNull(MapImage(result.Poster_path, MediaCoverTypes.Poster));
                 }
                 catch (Exception)
                 {
                     _logger.Debug(result);
                 }
 
-                if (result.trailer_key.IsNotNullOrWhiteSpace() && result.trailer_site.IsNotNullOrWhiteSpace())
+                if (result.Trailer_key.IsNotNullOrWhiteSpace() && result.Trailer_site.IsNotNullOrWhiteSpace())
                 {
-                    if (result.trailer_site == "youtube")
+                    if (result.Trailer_site == "youtube")
                     {
-                        imdbMovie.YouTubeTrailerId = result.trailer_key;
+                        imdbMovie.YouTubeTrailerId = result.Trailer_key;
                     }
                 }
 
@@ -694,8 +694,8 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
         {
             var newCollection = new MovieCollection
             {
-                Name = arg.name,
-                TmdbId = arg.id,
+                Name = arg.Name,
+                TmdbId = arg.Id,
             };
 
             return newCollection;

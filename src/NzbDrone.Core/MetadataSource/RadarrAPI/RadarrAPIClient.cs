@@ -13,7 +13,7 @@ namespace NzbDrone.Core.MetadataSource.RadarrAPI
     public interface IRadarrAPIClient
     {
         IHttpRequestBuilderFactory RadarrAPI { get; }
-        List<MovieResult> DiscoverMovies(string action, Func<HttpRequest, HttpRequest> enhanceRequest);
+        List<MovieResultResource> DiscoverMovies(string action, Func<HttpRequest, HttpRequest> enhanceRequest);
         List<AlternativeTitle> AlternativeTitlesForMovie(int tmdbId);
         Tuple<List<AlternativeTitle>, AlternativeYear> AlternativeTitlesAndYearForMovie(int tmdbId);
         AlternativeTitle AddNewAlternativeTitle(AlternativeTitle title, int tmdbId);
@@ -90,7 +90,7 @@ namespace NzbDrone.Core.MetadataSource.RadarrAPI
             return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
-        public List<MovieResult> DiscoverMovies(string action, Func<HttpRequest, HttpRequest> enhanceRequest = null)
+        public List<MovieResultResource> DiscoverMovies(string action, Func<HttpRequest, HttpRequest> enhanceRequest = null)
         {
             var request = RadarrAPI.Create().SetSegment("route", "discovery").SetSegment("action", action).Build();
 
@@ -99,7 +99,7 @@ namespace NzbDrone.Core.MetadataSource.RadarrAPI
                 request = enhanceRequest(request);
             }
 
-            return Execute<List<MovieResult>>(request);
+            return Execute<List<MovieResultResource>>(request);
         }
 
         public List<AlternativeTitle> AlternativeTitlesForMovie(int tmdbId)

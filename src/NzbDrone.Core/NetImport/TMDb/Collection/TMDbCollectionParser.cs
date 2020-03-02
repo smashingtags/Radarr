@@ -26,7 +26,7 @@ namespace NzbDrone.Core.NetImport.TMDb.Collection
                 return movies;
             }
 
-            var jsonResponse = JsonConvert.DeserializeObject<CollectionResponseRoot>(importResponse.Content);
+            var jsonResponse = JsonConvert.DeserializeObject<CollectionResponseRootResource>(importResponse.Content);
 
             // no movies were return
             if (jsonResponse == null)
@@ -34,10 +34,10 @@ namespace NzbDrone.Core.NetImport.TMDb.Collection
                 return movies;
             }
 
-            foreach (var movie in jsonResponse.parts)
+            foreach (var movie in jsonResponse.Parts)
             {
                 // Movies with no Year Fix
-                if (string.IsNullOrWhiteSpace(movie.release_date))
+                if (string.IsNullOrWhiteSpace(movie.Release_date))
                 {
                     continue;
                 }

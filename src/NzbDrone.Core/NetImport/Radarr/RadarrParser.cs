@@ -31,7 +31,7 @@ namespace NzbDrone.Core.NetImport.Radarr
                 return movies;
             }
 
-            var jsonResponse = JsonConvert.DeserializeObject<List<MovieResult>>(_importResponse.Content);
+            var jsonResponse = JsonConvert.DeserializeObject<List<MovieResultResource>>(_importResponse.Content);
 
             // no movies were return
             if (jsonResponse == null)

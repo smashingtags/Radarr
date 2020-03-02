@@ -9,6 +9,6 @@ namespace NzbDrone.Core.MetadataSource
 
         Movie MapMovieToTmdbMovie(Movie movie);
 
-        Movie MapMovie(SkyHook.Resource.MovieResult result);
+        Movie MapMovie(SkyHook.Resource.MovieResultResource result);
     }
 }

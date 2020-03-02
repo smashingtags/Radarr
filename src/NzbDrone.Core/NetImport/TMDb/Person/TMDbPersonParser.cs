@@ -28,7 +28,7 @@ namespace NzbDrone.Core.NetImport.TMDb.Person
                 return movies;
             }
 
-            var jsonResponse = JsonConvert.DeserializeObject<PersonCreditsRoot>(importResponse.Content);
+            var jsonResponse = JsonConvert.DeserializeObject<PersonCreditsRootResource>(importResponse.Content);
 
             // no movies were return
             if (jsonResponse == null)
@@ -40,10 +40,10 @@ namespace NzbDrone.Core.NetImport.TMDb.Person
 
             if (_settings.PersonCast)
             {
-                foreach (var movie in jsonResponse.cast)
+                foreach (var movie in jsonResponse.Cast)
                 {
                     // Movies with no Year Fix
-                    if (string.IsNullOrWhiteSpace(movie.release_date))
+                    if (string.IsNullOrWhiteSpace(movie.Release_date))
                     {
                         continue;
                     }
@@ -54,15 +54,15 @@ namespace NzbDrone.Core.NetImport.TMDb.Person
 
             if (crewTypes.Count > 0)
             {
-                foreach (var movie in jsonResponse.crew)
+                foreach (var movie in jsonResponse.Crew)
                 {
                     // Movies with no Year Fix
-                    if (string.IsNullOrWhiteSpace(movie.release_date))
+                    if (string.IsNullOrWhiteSpace(movie.Release_date))
                     {
                         continue;
                     }
 
-                    if (crewTypes.Contains(movie.department))
+                    if (crewTypes.Contains(movie.Department))
                     {
                         movies.AddIfNotNull(_skyhookProxy.MapMovie(movie));
                     }

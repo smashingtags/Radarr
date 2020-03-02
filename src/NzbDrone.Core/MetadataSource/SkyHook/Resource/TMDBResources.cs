@@ -1,99 +1,99 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
 {
-    public class FindRoot
+    public class FindRootResource
     {
-        public MovieResult[] movie_results { get; set; }
+        public MovieResultResource[] Movie_results { get; set; }
     }
 
-    public class MovieSearchRoot
+    public class MovieSearchRootResource
     {
-        public int page { get; set; }
-        public MovieResult[] results { get; set; }
-        public int total_results { get; set; }
-        public int total_pages { get; set; }
+        public int Page { get; set; }
+        public MovieResultResource[] Results { get; set; }
+        public int Total_results { get; set; }
+        public int Total_pages { get; set; }
     }
 
     public class AuthRefreshTokenResponse
     {
-        public string request_token { get; set; }
+        public string Request_token { get; set; }
     }
 
     public class AuthAccessTokenResponse
     {
-        public string access_token { get; set; }
-        public string account_id { get; set; }
+        public string Access_token { get; set; }
+        public string Account_id { get; set; }
     }
 
-    public class MovieResult
+    public class MovieResultResource
     {
-        public string poster_path { get; set; }
-        public bool adult { get; set; }
-        public string overview { get; set; }
-        public string release_date { get; set; }
-        public int?[] genre_ids { get; set; }
-        public int id { get; set; }
-        public string original_title { get; set; }
-        public string original_language { get; set; }
-        public string title { get; set; }
-        public string backdrop_path { get; set; }
-        public float popularity { get; set; }
-        public int vote_count { get; set; }
-        public bool video { get; set; }
-        public float vote_average { get; set; }
-        public string trailer_key { get; set; }
-        public string trailer_site { get; set; }
-        public string physical_release { get; set; }
-        public string physical_release_note { get; set; }
+        public string Poster_path { get; set; }
+        public bool Adult { get; set; }
+        public string Overview { get; set; }
+        public string Release_date { get; set; }
+        public int?[] Genre_ids { get; set; }
+        public int Id { get; set; }
+        public string Original_title { get; set; }
+        public string Original_language { get; set; }
+        public string Title { get; set; }
+        public string Backdrop_path { get; set; }
+        public float Popularity { get; set; }
+        public int Vote_count { get; set; }
+        public bool Video { get; set; }
+        public float Vote_average { get; set; }
+        public string Trailer_key { get; set; }
+        public string Trailer_site { get; set; }
+        public string Physical_release { get; set; }
+        public string Physical_release_note { get; set; }
     }
 
-    public class CreditsResult : MovieResult
+    public class CreditsResultResource : MovieResultResource
     {
-        public string department { get; set; }
-        public string job { get; set; }
-        public string credit_id { get; set; }
+        public string Department { get; set; }
+        public string Job { get; set; }
+        public string Credit_id { get; set; }
     }
 
     public class MovieResourceRoot
     {
-        public bool adult { get; set; }
-        public string backdrop_path { get; set; }
-        public CollectionResource belongs_to_collection { get; set; }
-        public int? status_code { get; set; }
-        public string status_message { get; set; }
-        public int budget { get; set; }
-        public Genre[] genres { get; set; }
-        public string homepage { get; set; }
-        public int id { get; set; }
-        public string imdb_id { get; set; }
-        public string original_language { get; set; }
-        public string original_title { get; set; }
-        public string overview { get; set; }
-        public float popularity { get; set; }
-        public string poster_path { get; set; }
-        public Production_Companies[] production_companies { get; set; }
-        public Production_Countries[] production_countries { get; set; }
-        public string release_date { get; set; }
-        public long revenue { get; set; }
-        public int runtime { get; set; }
-        public Spoken_Languages[] spoken_languages { get; set; }
-        public string status { get; set; }
-        public string tagline { get; set; }
-        public string title { get; set; }
-        public bool video { get; set; }
-        public float vote_average { get; set; }
-        public int vote_count { get; set; }
-        public AlternativeTitles alternative_titles { get; set; }
-        public ReleaseDatesResource release_dates { get; set; }
-        public VideosResource videos { get; set; }
-        public CreditsResource credits { get; set; }
-        public TranslationsResource translations { get; set; }
+        public bool Adult { get; set; }
+        public string Backdrop_path { get; set; }
+        public CollectionResource Belongs_to_collection { get; set; }
+        public int? Status_code { get; set; }
+        public string Status_message { get; set; }
+        public int Budget { get; set; }
+        public GenreResource[] Genres { get; set; }
+        public string Homepage { get; set; }
+        public int Id { get; set; }
+        public string Imdb_id { get; set; }
+        public string Original_language { get; set; }
+        public string Original_title { get; set; }
+        public string Overview { get; set; }
+        public float Popularity { get; set; }
+        public string Poster_path { get; set; }
+        public ProductionCompaniesResource[] Production_companies { get; set; }
+        public ProductionCountriesResource[] Production_countries { get; set; }
+        public string Release_date { get; set; }
+        public long Revenue { get; set; }
+        public int Runtime { get; set; }
+        public SpokenLanguagesResource[] Spoken_languages { get; set; }
+        public string Status { get; set; }
+        public string Tagline { get; set; }
+        public string Title { get; set; }
+        public bool Video { get; set; }
+        public float Vote_average { get; set; }
+        public int Vote_count { get; set; }
+        public AlternativeTitlesResource Alternative_titles { get; set; }
+        public ReleaseDatesResource Release_dates { get; set; }
+        public VideosResource Videos { get; set; }
+        public CreditsResource Credits { get; set; }
+        public TranslationsResource Translations { get; set; }
     }
 
     public class ReleaseDatesResource
     {
-        public List<ReleaseDates> results { get; set; }
+        public List<ReleaseDatesLanguageResource> Results { get; set; }
     }
 
     public class CreditsResource
@@ -102,67 +102,67 @@ namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
         public List<CrewResource> Crew { get; set; }
     }
 
-    public class ReleaseDate
+    public class ReleaseDateResource
     {
-        public string certification { get; set; }
-        public string iso_639_1 { get; set; }
-        public string note { get; set; }
-        public string release_date { get; set; }
-        public int type { get; set; }
+        public string Certification { get; set; }
+        public string Iso_639_1 { get; set; }
+        public string Note { get; set; }
+        public string Release_date { get; set; }
+        public int Type { get; set; }
     }
 
-    public class ReleaseDates
+    public class ReleaseDatesLanguageResource
     {
-        public string iso_3166_1 { get; set; }
-        public List<ReleaseDate> release_dates { get; set; }
+        public string Iso_3166_1 { get; set; }
+        public List<ReleaseDateResource> Release_dates { get; set; }
     }
 
     public class CollectionResource
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string poster_path { get; set; }
-        public string backdrop_path { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Poster_path { get; set; }
+        public string Backdrop_path { get; set; }
     }
 
-    public class Genre
+    public class GenreResource
     {
-        public int id { get; set; }
-        public string name { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
-    public class Production_Companies
+    public class ProductionCompaniesResource
     {
-        public string name { get; set; }
-        public int id { get; set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
     }
 
-    public class Production_Countries
+    public class ProductionCountriesResource
     {
-        public string iso_3166_1 { get; set; }
-        public string name { get; set; }
+        public string Iso_3166_1 { get; set; }
+        public string Name { get; set; }
     }
 
-    public class Spoken_Languages
+    public class SpokenLanguagesResource
     {
-        public string iso_639_1 { get; set; }
-        public string name { get; set; }
+        public string Iso_639_1 { get; set; }
+        public string Name { get; set; }
     }
 
-    public class AlternativeTitles
+    public class AlternativeTitlesResource
     {
-        public List<Title> titles { get; set; }
+        public List<TitleResource> Titles { get; set; }
     }
 
-    public class Title
+    public class TitleResource
     {
-        public string iso_3166_1 { get; set; }
-        public string title { get; set; }
+        public string Iso_3166_1 { get; set; }
+        public string Title { get; set; }
     }
 
     public class VideosResource
     {
-        public List<Video> results { get; set; }
+        public List<VideoResource> Results { get; set; }
     }
 
     public class CrewResource
@@ -185,71 +185,71 @@ namespace NzbDrone.Core.MetadataSource.SkyHook.Resource
         public string Profile_Path { get; set; }
     }
 
-    public class Video
+    public class VideoResource
     {
-        public string id { get; set; }
-        public string iso_639_1 { get; set; }
-        public string iso_3166_1 { get; set; }
-        public string key { get; set; }
-        public string name { get; set; }
-        public string site { get; set; }
-        public string size { get; set; }
-        public string type { get; set; }
+        public string Id { get; set; }
+        public string Iso_639_1 { get; set; }
+        public string Iso_3166_1 { get; set; }
+        public string Key { get; set; }
+        public string Name { get; set; }
+        public string Site { get; set; }
+        public string Size { get; set; }
+        public string Type { get; set; }
     }
 
     public class TranslationsResource
     {
-        public List<Translation> translations { get; set; }
+        public List<TranslationResource> Translations { get; set; }
     }
 
-    public class Translation
+    public class TranslationResource
     {
-        public string iso_639_1 { get; set; }
-        public string iso_3166_1 { get; set; }
-        public string name { get; set; }
-        public string english_name { get; set; }
-        public TranslationData data { get; set; }
+        public string Iso_639_1 { get; set; }
+        public string Iso_3166_1 { get; set; }
+        public string Name { get; set; }
+        public string English_name { get; set; }
+        public TranslationDataResource Data { get; set; }
     }
 
-    public class TranslationData
+    public class TranslationDataResource
     {
-        public string title { get; set; }
-        public string overview { get; set; }
+        public string Title { get; set; }
+        public string Overview { get; set; }
     }
 
-    public class ListResponseRoot
+    public class ListResponseRootResource
     {
-        public string id { get; set; }
-        public Item[] results { get; set; }
-        public int total_results { get; set; }
-        public string iso_639_1 { get; set; }
-        public string name { get; set; }
-        public object poster_path { get; set; }
+        public string Id { get; set; }
+        public ListItemResource[] Results { get; set; }
+        public int Total_results { get; set; }
+        public string Iso_639_1 { get; set; }
+        public string Name { get; set; }
+        public object Poster_path { get; set; }
     }
 
-    public class CollectionResponseRoot
+    public class CollectionResponseRootResource
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string overview { get; set; }
-        public string poster_path { get; set; }
-        public string backdrop_path { get; set; }
-        public MovieResult[] parts { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Overview { get; set; }
+        public string Poster_path { get; set; }
+        public string Backdrop_path { get; set; }
+        public MovieResultResource[] Parts { get; set; }
     }
 
-    public class PersonCreditsRoot
+    public class PersonCreditsRootResource
     {
-        public CreditsResult[] cast { get; set; }
-        public CreditsResult[] crew { get; set; }
-        public int id { get; set; }
+        public CreditsResultResource[] Cast { get; set; }
+        public CreditsResultResource[] Crew { get; set; }
+        public int Id { get; set; }
     }
 
-    public class Item : MovieResult
+    public class ListItemResource : MovieResultResource
     {
-        public string media_type { get; set; }
-        public string first_air_date { get; set; }
-        public string[] origin_country { get; set; }
-        public string name { get; set; }
-        public string original_name { get; set; }
+        public string Media_type { get; set; }
+        public string First_air_date { get; set; }
+        public string[] Origin_country { get; set; }
+        public string Name { get; set; }
+        public string Original_name { get; set; }
     }
 }
