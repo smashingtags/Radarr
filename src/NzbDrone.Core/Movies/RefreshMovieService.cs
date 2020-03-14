@@ -110,6 +110,7 @@ namespace NzbDrone.Core.Movies
             movie.PhysicalRelease = movieInfo.PhysicalRelease;
             movie.YouTubeTrailerId = movieInfo.YouTubeTrailerId;
             movie.Studio = movieInfo.Studio;
+            movie.OriginalLanguage = movieInfo.OriginalLanguage;
             movie.HasPreDBEntry = movieInfo.HasPreDBEntry;
 
             try

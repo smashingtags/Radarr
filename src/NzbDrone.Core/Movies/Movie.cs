@@ -59,6 +59,7 @@ namespace NzbDrone.Core.Movies
         public int SecondaryYearSourceId { get; set; }
         public string YouTubeTrailerId { get; set; }
         public string Studio { get; set; }
+        public string OriginalLanguage { get; set; }
 
         public bool IsRecentMovie
         {

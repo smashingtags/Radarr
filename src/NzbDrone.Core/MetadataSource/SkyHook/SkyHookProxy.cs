@@ -299,6 +299,8 @@ namespace NzbDrone.Core.MetadataSource.SkyHook
 
             movie.AlternativeTitles.AddRange(altTitles);
 
+            movie.OriginalLanguage = resource.Original_language;
+
             var people = new List<Credit>();
 
             people.AddRange(resource.Credits.Cast.Select(MapCast).ToList());

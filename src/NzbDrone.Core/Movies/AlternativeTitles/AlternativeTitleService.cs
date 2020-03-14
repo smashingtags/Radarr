@@ -73,21 +73,26 @@ namespace NzbDrone.Core.Movies.AlternativeTitles
         {
             int movieId = movie.Id;
 
+            var deduplicatedTitles = new List<AlternativeTitle>();
+
             // First update the movie ids so we can correlate them later.
             titles.ForEach(t => t.MovieId = movieId);
 
-            // Then make sure none of them are the same as the main title.
-            titles = titles.Where(t => t.CleanTitle != movie.CleanTitle).ToList();
+            // Add all translations
+            deduplicatedTitles.AddRange(titles.Where(t => t.SourceType == SourceType.Translation));
+
+            // Then make sure none of others are the same as the main title.
+            titles = titles.Where(t => t.SourceType != SourceType.Translation).Where(t => t.CleanTitle != movie.CleanTitle).ToList();
 
             // Then make sure they are all distinct titles
-            titles = titles.DistinctBy(t => t.CleanTitle).ToList();
+            deduplicatedTitles.AddRange(titles.DistinctBy(t => t.CleanTitle).ToList());
 
             // Now find titles to delete, update and insert.
             var existingTitles = _titleRepo.FindByMovieId(movieId);
 
-            var insert = titles.Where(t => !existingTitles.Contains(t));
-            var update = existingTitles.Where(t => titles.Contains(t));
-            var delete = existingTitles.Where(t => !titles.Contains(t));
+            var insert = deduplicatedTitles.Where(t => !existingTitles.Contains(t));
+            var update = existingTitles.Where(t => deduplicatedTitles.Contains(t));
+            var delete = existingTitles.Where(t => !deduplicatedTitles.Contains(t));
 
             _titleRepo.DeleteMany(delete.ToList());
             _titleRepo.UpdateMany(update.ToList());
