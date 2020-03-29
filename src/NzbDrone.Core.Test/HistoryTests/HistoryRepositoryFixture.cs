@@ -10,7 +10,7 @@ using NzbDrone.Core.Test.Framework;
 namespace NzbDrone.Core.Test.HistoryTests
 {
     [TestFixture]
-    public class HistoryRepositoryFixture : DbTest<HistoryRepository, History.History>
+    public class HistoryRepositoryFixture : DbTest<HistoryRepository, MovieHistory>
     {
         [SetUp]
         public void Setup()
@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Test.HistoryTests
         [Test]
         public void should_read_write_dictionary()
         {
-            var history = Builder<History.History>.CreateNew()
+            var history = Builder<History.MovieHistory>.CreateNew()
                 .With(c => c.Quality = new QualityModel())
                 .With(c => c.Languages = new List<Language>())
                 .BuildNew();
@@ -36,18 +36,18 @@ namespace NzbDrone.Core.Test.HistoryTests
         [Test]
         public void should_get_download_history()
         {
-            var historyBluray = Builder<History.History>.CreateNew()
+            var historyBluray = Builder<History.MovieHistory>.CreateNew()
                 .With(c => c.Quality = new QualityModel(Quality.Bluray1080p))
                 .With(c => c.Languages = new List<Language> { Language.English })
                 .With(c => c.MovieId = 12)
-                .With(c => c.EventType = HistoryEventType.Grabbed)
+                .With(c => c.EventType = MovieHistoryEventType.Grabbed)
                 .BuildNew();
 
-            var historyDvd = Builder<History.History>.CreateNew()
+            var historyDvd = Builder<History.MovieHistory>.CreateNew()
                 .With(c => c.Quality = new QualityModel(Quality.DVD))
                 .With(c => c.Languages = new List<Language> { Language.English })
                 .With(c => c.MovieId = 12)
-                .With(c => c.EventType = HistoryEventType.Grabbed)
+                .With(c => c.EventType = MovieHistoryEventType.Grabbed)
              .BuildNew();
 
             Subject.Insert(historyBluray);

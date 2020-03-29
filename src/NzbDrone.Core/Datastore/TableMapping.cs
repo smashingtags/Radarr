@@ -10,6 +10,7 @@ using NzbDrone.Core.CustomFilters;
 using NzbDrone.Core.CustomFormats;
 using NzbDrone.Core.Datastore.Converters;
 using NzbDrone.Core.Download;
+using NzbDrone.Core.Download.History;
 using NzbDrone.Core.Download.Pending;
 using NzbDrone.Core.Extras.Metadata;
 using NzbDrone.Core.Extras.Metadata.Files;
@@ -93,7 +94,7 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(d => d.Protocol)
                   .Ignore(d => d.Tags);
 
-            Mapper.Entity<History.History>("History").RegisterModel();
+            Mapper.Entity<History.MovieHistory>("History").RegisterModel();
 
             Mapper.Entity<MovieFile>("MovieFiles").RegisterModel()
                   .Ignore(f => f.Path);
@@ -137,6 +138,8 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<DownloadClientStatus>("DownloadClientStatus").RegisterModel();
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
+
+            Mapper.Entity<DownloadHistory>("DownloadHistory").RegisterModel();
         }
 
         private static void RegisterMappers()
